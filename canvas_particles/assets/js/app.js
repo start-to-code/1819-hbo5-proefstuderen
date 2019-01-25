@@ -39,10 +39,29 @@ class App {
     
         for(let i=0;i<5000+Math.round(Math.random()*500);i++){
             console.log(fx + ' ' + fy + ' ' + cr)
-            const p = new Particle(this._pId, fx, fy, 4, Math.random()*8-4, Math.random()*8-4, cr, cg, cb);
+            const p = new Particle(observable, this._pId, fx, fy, 4, Math.random()*8-4, Math.random()*8-4, cr, cg, cb);
+            p.observable.addEventListener('particle_ended', (ev) => {
+                console.log(ev)
+                this.removeParticleFromArray(this._pId);
+            });
             this._particlesArray.push(p);
             this._pId++;
         }
+    }
+
+    removeParticle(id){
+        let match = false
+        let i = 0
+        let p = 0
+        while(!match && i<this._particlesArray.length) {
+            p = this._particlesArray[i]
+            if(p.id === id) {
+                match = true
+            } else {
+                i++
+            }
+        }
+        this._particlesArray.splice(i,1);
     }
 
     updateCanvas() {
@@ -53,7 +72,7 @@ class App {
         this._canvas2DContext.globalCompositeOperation = "source-over";
         this._canvas2DContext.fillStyle = "rgba(0,0,0,0.1)";
         this._canvas2DContext.fillRect(0, 0, canvasWidth, canvasHeight);
-        this._canvas2DContext.globalCompositeOperation = "darker";
+        this._canvas2DContext.globalCompositeOperation = "lighter";
     
         // Current time
         const currentTime = new Date();

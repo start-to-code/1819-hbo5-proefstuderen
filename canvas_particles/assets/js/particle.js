@@ -1,5 +1,7 @@
 class Particle {
-    constructor(id, x, y, size, velX, velY, cr, cg, cb) {
+    constructor(observable, id, x, y, size, velX, velY, cr, cg, cb) {
+        this.observable = observable
+
         this.id = id
         this.x = x
         this.y = y
@@ -25,9 +27,9 @@ class Particle {
     display(canvas2DContext) {
         this.calpha *= 0.986
 		// Check if particle is gone
-		/*if(this.calpha < 0.005){
-			$(this).trigger("particle_ended");
-        }*/
+		if(this.calpha < 0.005){
+			this.observable.emit('particle_ended')
+        }
     
 		// Save current context
 		canvas2DContext.save()
